@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Selflock</h1>
+    <div id="Status" style="height:100px;width:auto"></div>
+    <button id="lockButton">Bildschirm sperren</button>
+    <script>
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\\[\\]]/g, '\\\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\\+/g, ' '));
+        }
+
+        var ServerId = getParameterByName('id');
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const UNIQUE_ID = "id" + Math.random().toString(16).slice(2);
+        const socket = new WebSocket('wss://selflock-service.onrender.com/');
+        const status = document.getElementById('Status');
+
+        const writeLine = (data) => {
+            if (data.message === "Status") {
+                if (data.LoggedIn) {
+                    status.style.backgroundColor = "green";
+                } else {
+                    status.style.backgroundColor = "red";
+                }
+            }
+            if (data.message === "Status offline") {
+                status.style.backgroundColor = "grey";
+            }
+        };
+
+        socket.addEventListener('open', () => {
+            writeLine('connected');
+        });
+
+        socket.addEventListener('close', () => {
+            writeLine('closed');
+        });
+
+        socket.addEventListener('message', async ({ data }) => {
+            var text = null;
+            if (data.text) {
+                text = await data.text();
+            } else {
+                text = data;
+            }
+            writeLine(JSON.parse(text));
+        });
+
+        // Status alle Sekunde abfragen
+        setInterval(() => {
+            var data = JSON.stringify({
+                client_id: UNIQUE_ID,
+                receiver_id: ServerId,
+                message: "Status"
+            });
+            socket.send(data);
+        }, 1000);
+
+        // Button-Klick zum Senden
+        const lockButton = document.getElementById('lockButton');
+        lockButton.addEventListener('click', () => {
+            var data = JSON.stringify({
+                client_id: UNIQUE_ID,
+                receiver_id: ServerId,
+                message: "Lock screen"
+            });
+            socket.send(data);
+        });
+
+    </script>
+</body>
+</html>
