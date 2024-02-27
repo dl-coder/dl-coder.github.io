@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>SelfLock</title>
+
+    <base href="/" />
+
+    <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
+    <meta name="viewport"
+          content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="This is a SelfLock app" />
+
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
+
+    <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="SelfLock" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <!-- This tag is used by the SelfLock CLI to identify template projects. Don't remove if you are using the CLI. -->
+    <meta name="pwa-starter-template-identity" content="pwa-starter" />
+
+    <!-- Imports an icon to represent the document. -->
+    <link rel="icon" href="/assets/icons/icon_24.png" type="image/png" />
+
+    <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- light mode and dark mode CSS -->
+    <link rel="stylesheet" media="(prefers-color-scheme:light)"
+          href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/light.css">
+    <link rel="stylesheet" media="(prefers-color-scheme:dark)"
+          href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/dark.css"
+          onload="document.documentElement.classList.add('sl-theme-dark');">
+
+    
+  <script type="module" crossorigin src="/code/index-98726508.js"></script>
+  <link rel="stylesheet" href="/code/index-bf2cb32a.css">
+</head>
+
 <body>
-    <h1>Selflock</h1>
-    <div id="Status" style="height:100px;width:auto"></div>
-    <button id="lockButton">Bildschirm sperren</button>
+    <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
+    <app-index></app-index>
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(
+                '/sw.js'
+            );
+        }
         function getParameterByName(name, url = window.location.href) {
             name = name.replace(/[\\[\\]]/g, '\\\\$&');
             const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
@@ -12,67 +57,72 @@
             if (!results) return null;
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\\+/g, ' '));
-        }
-
-        var ServerId = getParameterByName('id');
-        const urlParams = new URLSearchParams(window.location.search);
-
-        const UNIQUE_ID = "id" + Math.random().toString(16).slice(2);
-        const socket = new WebSocket('wss://selflock-service.onrender.com/');
-        const status = document.getElementById('Status');
-
-        const writeLine = (data) => {
-            if (data.message === "Status") {
-                if (data.LoggedIn) {
-                    status.style.backgroundColor = "green";
-                } else {
-                    status.style.backgroundColor = "red";
-                }
-            }
-            if (data.message === "Status offline") {
-                status.style.backgroundColor = "grey";
-            }
+        };
+        function isValidGuid(string) {
+            // Erstelle eine Variable für den regulären Ausdruck, der das Guid-Format überprüft
+            const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+            // Gib true zurück, wenn der String dem regulären Ausdruck entspricht, sonst false
+            return regex.test(string);
         };
 
-        socket.addEventListener('open', () => {
-            writeLine('connected');
-        });
-
-        socket.addEventListener('close', () => {
-            writeLine('closed');
-        });
-
-        socket.addEventListener('message', async ({ data }) => {
-            var text = null;
-            if (data.text) {
-                text = await data.text();
-            } else {
-                text = data;
+        var serverId = getParameterByName('id');
+        if (isValidGuid(serverId)) {
+            try {
+                var machines = JSON.parse(localStorage.machines);
+            } catch {
+                var machines = [];
             }
-            writeLine(JSON.parse(text));
-        });
-
-        // Status alle Sekunde abfragen
-        setInterval(() => {
-            var data = JSON.stringify({
-                client_id: UNIQUE_ID,
-                receiver_id: ServerId,
-                message: "Status"
+            var alreadyAdded = machines.some(machine => {
+                return machine.serverId === serverId;
             });
-            socket.send(data);
-        }, 1000);
+            if (!alreadyAdded) {
+                machines.push({
+                    serverId: serverId
+                });
+                localStorage.machines = JSON.stringify(machines);
+            }
+        }
+        history.replaceState({}, "", location.href.split("?")[0]);
 
-        // Button-Klick zum Senden
-        const lockButton = document.getElementById('lockButton');
-        lockButton.addEventListener('click', () => {
-            var data = JSON.stringify({
-                client_id: UNIQUE_ID,
-                receiver_id: ServerId,
-                message: "Lock screen"
+        window.socketState = "offline";
+        // Erstelle eine Variable für die WebSocket-URL
+        const wsUrl = "wss://selflock-service.onrender.com";
+        // Erstelle eine Funktion, die eine WebSocket-Verbindung aufbaut
+        function connectWebSocket() {
+            // Erstelle ein neues WebSocket-Objekt
+            const ws = new WebSocket(wsUrl);
+            // Füge einen Event-Listener für die open-Ereignis hinzu
+            ws.addEventListener("open", () => {
+                // Gib eine Nachricht aus, wenn die Verbindung erfolgreich aufgebaut wurde
+                console.log("WebSocket verbunden");
+                window.socketState = "online";
             });
-            socket.send(data);
-        });
+            // Füge einen Event-Listener für die message-Ereignis hinzu
+            ws.addEventListener("message", (event) => {
+                // Gib die empfangene Nachricht aus
+                console.log("WebSocket-Nachricht: " + event.data);
+            });
+            // Füge einen Event-Listener für die close-Ereignis hinzu
+            ws.addEventListener("close", () => {
+                // Gib eine Nachricht aus, wenn die Verbindung geschlossen wurde
+                console.log("WebSocket getrennt");
+                window.socketState = "offline";
+                // Rufe die Funktion erneut auf, um die Verbindung wiederherzustellen
+                connectWebSocket();
+            });
+            // Füge einen Event-Listener für die error-Ereignis hinzu
+            ws.addEventListener("error", (error) => {
+                // Gib den Fehler aus
+                console.error("WebSocket-Fehler: " + error);
+                // Schließe die Verbindung
+                window.socketState = "offline";
+                ws.close();
+            });
+        }
 
+        // Rufe die Funktion zum ersten Mal auf
+        connectWebSocket();
     </script>
 </body>
+
 </html>
