@@ -37,7 +37,7 @@
           onload="document.documentElement.classList.add('sl-theme-dark');">
 
     
-  <script type="module" crossorigin src="/code/index-98726508.js"></script>
+  <script type="module" crossorigin src="/code/index-93562f06.js"></script>
   <link rel="stylesheet" href="/code/index-bf2cb32a.css">
 </head>
 
@@ -90,7 +90,7 @@
         // Erstelle eine Funktion, die eine WebSocket-Verbindung aufbaut
         function connectWebSocket() {
             // Erstelle ein neues WebSocket-Objekt
-            const ws = new WebSocket(wsUrl);
+            window.ws = new WebSocket(wsUrl);
             // Füge einen Event-Listener für die open-Ereignis hinzu
             ws.addEventListener("open", () => {
                 // Gib eine Nachricht aus, wenn die Verbindung erfolgreich aufgebaut wurde
@@ -98,9 +98,17 @@
                 window.socketState = "online";
             });
             // Füge einen Event-Listener für die message-Ereignis hinzu
-            ws.addEventListener("message", (event) => {
-                // Gib die empfangene Nachricht aus
-                console.log("WebSocket-Nachricht: " + event.data);
+            ws.addEventListener("message", async (event) => {
+                var data = event.data;
+                var text = null;
+                if (data.text) {
+                    text = await data.text();
+                } else {
+                    text = data;
+                }
+                if (window.home) {
+                    home.updateClient(JSON.parse(text));
+                }
             });
             // Füge einen Event-Listener für die close-Ereignis hinzu
             ws.addEventListener("close", () => {
