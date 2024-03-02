@@ -4,14 +4,14 @@
   "name": "SelfLock",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "starter",
-  "theme_color": "#E1477E",
+  "short_name": "SelfLock",
+  "theme_color": "#181818",
   "description": "SelfLock app",
   "orientation": "any",
-  "background_color": "#E1477E",
+  "background_color": "#181818",
   "related_applications": [],
   "prefer_related_applications": false,
-  "display_override": ["window-controls-overlay"],
+  "display_override": [ "window-controls-overlay" ],
   "launch_handler": {
     "client_mode": "focus-existing"
   },
@@ -37,13 +37,6 @@
       "type": "image/png"
     }
   ],
-  "screenshots": [
-    {
-      "src": "assets/screenshots/screen.png",
-      "sizes": "1617x1012",
-      "type": "image/png"
-    }
-  ],
   "features": [
     "Cross Platform",
     "fast",
@@ -58,27 +51,10 @@
       "short_name": "About",
       "description": "Open the about page",
       "url": "/about",
-      "icons": [{ "src": "assets/icons/192x192.png", "sizes": "192x192" }]
-    }
-  ],
-  "widgets": [
-    {
-      "name": "Starter Widget",
-      "tag": "starterWidget",
-      "ms_ac_template": "widget/ac.json",
-      "data": "widget/data.json",
-      "description": "A simple widget example from pwa-starter.",
-      "screenshots": [
-        {
-          "src": "assets/screenshots/widget-screen.png",
-          "sizes": "500x500",
-          "label": "Widget screenshot"
-        }
-      ],
       "icons": [
         {
-          "src": "assets/icons/48x48.png",
-          "sizes": "48x48"
+          "src": "assets/icons/192x192.png",
+          "sizes": "192x192"
         }
       ]
     }
