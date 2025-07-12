@@ -37,8 +37,8 @@
           onload="document.documentElement.classList.add('sl-theme-dark');">
 
     
-  <script type="module" crossorigin src="/code/index-3f9292b9.js"></script>
-  <link rel="stylesheet" href="/code/index-bf2cb32a.css">
+  <script type="module" crossorigin src="/code/index-47daf3e9.js"></script>
+  <link rel="stylesheet" href="/code/index-eed02463.css">
 </head>
 
 <body>
@@ -66,6 +66,7 @@
         };
 
         var serverId = getParameterByName('id');
+        var name = getParameterByName('name') || "Unnamed device";
         if (isValidGuid(serverId)) {
             try {
                 var machines = JSON.parse(localStorage.machines);
@@ -77,7 +78,8 @@
             });
             if (!alreadyAdded) {
                 machines.push({
-                    serverId: serverId
+                    serverId: serverId,
+                    name: name
                 });
                 localStorage.machines = JSON.stringify(machines);
             }
@@ -93,8 +95,6 @@
             window.ws = new WebSocket(wsUrl);
             // Füge einen Event-Listener für die open-Ereignis hinzu
             ws.addEventListener("open", () => {
-                // Gib eine Nachricht aus, wenn die Verbindung erfolgreich aufgebaut wurde
-                console.log("WebSocket verbunden");
                 window.socketState = "online";
             });
             // Füge einen Event-Listener für die message-Ereignis hinzu
@@ -112,17 +112,12 @@
             });
             // Füge einen Event-Listener für die close-Ereignis hinzu
             ws.addEventListener("close", () => {
-                // Gib eine Nachricht aus, wenn die Verbindung geschlossen wurde
-                console.log("WebSocket getrennt");
                 window.socketState = "offline";
                 // Rufe die Funktion erneut auf, um die Verbindung wiederherzustellen
                 connectWebSocket();
             });
             // Füge einen Event-Listener für die error-Ereignis hinzu
             ws.addEventListener("error", (error) => {
-                // Gib den Fehler aus
-                console.error("WebSocket-Fehler: " + error);
-                // Schließe die Verbindung
                 window.socketState = "offline";
                 ws.close();
             });
