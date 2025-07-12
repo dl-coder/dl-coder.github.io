@@ -47,10 +47,10 @@
   ],
   "shortcuts": [
     {
-      "name": "Open About",
-      "short_name": "About",
-      "description": "Open the about page",
-      "url": "/about",
+      "name": "Help",
+      "short_name": "Help",
+      "description": "Open the help page",
+      "url": "/help",
       "icons": [
         {
           "src": "assets/icons/192x192.png",
