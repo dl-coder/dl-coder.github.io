@@ -1,4 +1,4 @@
-import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-a59b0b6a.js";var m=Object.defineProperty,y=Object.getOwnPropertyDescriptor,h=(o,t,s,i)=>{for(var e=i>1?void 0:i?y(t,s):t,r=o.length-1,a;r>=0;r--)(a=o[r])&&(e=(i?a(t,s,e):a(e))||e);return i&&e&&m(t,s,e),e};let n=class extends d{constructor(){super(...arguments),this.lang=navigator.language.startsWith("de")?"de":"en"}render(){return l`
+import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-02bf7781.js";var m=Object.defineProperty,y=Object.getOwnPropertyDescriptor,h=(o,t,s,i)=>{for(var e=i>1?void 0:i?y(t,s):t,r=o.length-1,a;r>=0;r--)(a=o[r])&&(e=(i?a(t,s,e):a(e))||e);return i&&e&&m(t,s,e),e};let n=class extends d{constructor(){super(...arguments),this.lang=navigator.language.startsWith("de")?"de":"en"}render(){return l`
       <app-header ?enableBack="${!0}"></app-header>
       <main>
           ${this.lang==="de"?l`
@@ -125,4 +125,4 @@ import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-a59b0b6a.js";var m
       </main>
       <app-footer></app-footer>
     `}};n.styles=[p,g];h([c()],n.prototype,"lang",2);n=h([u("app-help")],n);export{n as AppHelp};
-//# sourceMappingURL=app-help-29e3b4f7.js.map
+//# sourceMappingURL=app-help-e18ba357.js.map
