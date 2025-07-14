@@ -1,9 +1,9 @@
-import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-ce72933c.js";var m=Object.defineProperty,y=Object.getOwnPropertyDescriptor,h=(o,i,s,t)=>{for(var e=t>1?void 0:t?y(i,s):i,r=o.length-1,a;r>=0;r--)(a=o[r])&&(e=(t?a(i,s,e):a(e))||e);return t&&e&&m(i,s,e),e};let n=class extends d{constructor(){super(...arguments),this.lang=navigator.language.startsWith("de")?"de":"en"}render(){return l`
+import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-d0ce08bb.js";var m=Object.defineProperty,y=Object.getOwnPropertyDescriptor,h=(o,t,s,i)=>{for(var e=i>1?void 0:i?y(t,s):t,r=o.length-1,a;r>=0;r--)(a=o[r])&&(e=(i?a(t,s,e):a(e))||e);return i&&e&&m(t,s,e),e};let n=class extends d{constructor(){super(...arguments),this.lang=navigator.language.startsWith("de")?"de":"en"}render(){return l`
       <app-header ?enableBack="${!0}"></app-header>
       <main>
           ${this.lang==="de"?l`
             <h2>Wofür ist SelfLock.online:</h2>
-            <p>Mit SelfLock.online können Sie Ihren Windows-PC von unterwegs sperren – bequem per Smartphone, ohne zum Rechner zurücklaufen zu müssen. Viele Firmen schreiben diese Funktion in ihren Sicherheitsrichtlinien vor. Erhöhte Systemrechte sind nicht notwendig.</p>
+            <p>Mit SelfLock.online können Sie Ihren Windows-PC von unterwegs sperren – bequem per Smartphone, ohne zum Rechner zurücklaufen zu müssen. Viele Firmen schreiben dieses Verhalten in ihren Sicherheitsrichtlinien vor. Erhöhte Systemrechte sind nicht notwendig.</p>
 
             <h3>Installation:</h3>
             <p>Laden Sie die SelfLock-App herunter und installieren Sie sie auf Ihrem Windows-PC. Während der Installation werden Sie gefragt, ob die App automatisch mit Windows gestartet werden soll. Diese Einstellung lässt sich später im Kontextmenü der Systray-App ändern.</p>
@@ -125,4 +125,4 @@ import{s as d,x as l,a as p,b as g,t as c,e as u}from"./index-ce72933c.js";var m
       </main>
       <app-footer></app-footer>
     `}};n.styles=[p,g];h([c()],n.prototype,"lang",2);n=h([u("app-help")],n);export{n as AppHelp};
-//# sourceMappingURL=app-help-64c1b9ee.js.map
+//# sourceMappingURL=app-help-91003609.js.map

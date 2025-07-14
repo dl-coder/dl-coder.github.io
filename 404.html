@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <script type="text/javascript">
+      const base = '/'; // Passe das an, falls dein BASE_URL nicht "/" ist.
+      const path = window.location.pathname + window.location.search + window.location.hash;
+      window.location.replace(`${base}?pat=${encodeURIComponent(path.slice(1))}`);
+    </script>
+</head>
+<body>
+</body>
+</html>
